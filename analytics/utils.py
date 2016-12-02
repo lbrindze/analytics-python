@@ -5,6 +5,7 @@ import logging
 import numbers
 
 import six
+import sys
 
 log = logging.getLogger('segment')
 
@@ -74,3 +75,17 @@ def _coerce_unicode(cmplx):
     except:
         raise
     return item
+
+
+def clean_exit(func):
+    # ugly hack to get around
+    # atexit's excentricities
+    if (sys.version_info > (3, 0)):
+        import atexit
+        # This prevents exceptions and a messy shutdown when the interpreter is
+        # destroyed before the daemon thread finishes execution. However, it
+        # is *not* the same as flushing the queue! To guarantee all messages
+        # have been delivered, you'll still need to call flush().
+        atexit.register(func)
+    else:
+        sys.exitfunc = func

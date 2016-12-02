@@ -1,13 +1,13 @@
+import sys
 from datetime import datetime
 from uuid import uuid4
 import logging
 import numbers
-import atexit
 
 from dateutil.tz import tzutc
 from six import string_types
 
-from analytics.utils import guess_timezone, clean
+from analytics.utils import guess_timezone, clean, clean_exit
 from analytics.consumer import Consumer
 from analytics.version import VERSION
 
@@ -45,7 +45,7 @@ class Client(object):
             # destroyed before the daemon thread finishes execution. However, it
             # is *not* the same as flushing the queue! To guarantee all messages
             # have been delivered, you'll still need to call flush().
-            atexit.register(self.join)
+            clean_exit(self.join)
             self.consumer.start()
 
     def identify(self, user_id=None, traits=None, context=None, timestamp=None,
