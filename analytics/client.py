@@ -45,7 +45,9 @@ class Client(object):
             # destroyed before the daemon thread finishes execution. However, it
             # is *not* the same as flushing the queue! To guarantee all messages
             # have been delivered, you'll still need to call flush().
-            clean_exit(self.join)
+            # clean_exit(self.join)
+            print(sys.version_info)
+            sys.exitfunc = self.join
             self.consumer.start()
 
     def identify(self, user_id=None, traits=None, context=None, timestamp=None,
